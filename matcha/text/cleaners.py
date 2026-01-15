@@ -14,7 +14,6 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 import logging
 import re
 
-import phonemizer
 from unidecode import unidecode
 
 # To avoid excessive logging we set the log level of the phonemizer package to Critical
@@ -24,13 +23,24 @@ critical_logger.setLevel(logging.CRITICAL)
 # Intializing the phonemizer globally significantly reduces the speed
 # now the phonemizer is not initialising at every call
 # Might be less flexible, but it is much-much faster
-global_phonemizer = phonemizer.backend.EspeakBackend(
-    language="en-us",
-    preserve_punctuation=True,
-    with_stress=True,
-    language_switch="remove-flags",
-    logger=critical_logger,
-)
+# NOTE: Wrapped in try-except to allow module to load without espeak installed
+global_phonemizer = None
+try:
+    import phonemizer
+
+    global_phonemizer = phonemizer.backend.EspeakBackend(
+        language="en-us",
+        preserve_punctuation=True,
+        with_stress=True,
+        language_switch="remove-flags",
+        logger=critical_logger,
+    )
+except (ImportError, RuntimeError) as e:
+    # espeak not installed or phonemizer import failed
+    # This is fine - Shanghai dialect cleaners don't need it
+    logging.warning(
+        f"eSpeak backend not available: {e}. English cleaners will not work."
+    )
 
 
 # Regular expression matching whitespace:
@@ -104,6 +114,10 @@ def transliteration_cleaners(text):
 
 def english_cleaners2(text):
     """Pipeline for English text, including abbreviation expansion. + punctuation + stress"""
+    if global_phonemizer is None:
+        raise RuntimeError(
+            "eSpeak backend is not available. Install espeak-ng or use shanghai_cleaners instead."
+        )
     text = convert_to_ascii(text)
     text = lowercase(text)
     text = expand_abbreviations(text)

@@ -1,6 +1,7 @@
 """from https://github.com/keithito/tacotron"""
 
 from matcha.text import cleaners
+from matcha.text import shanghai_cleaners
 from matcha.text.symbols import symbols
 
 # Mappings from symbol to numeric ID and vice versa:
@@ -51,7 +52,10 @@ def sequence_to_text(sequence):
 
 def _clean_text(text, cleaner_names):
     for name in cleaner_names:
-        cleaner = getattr(cleaners, name)
+        # Try standard cleaners first, then shanghai_cleaners
+        cleaner = getattr(cleaners, name, None) or getattr(
+            shanghai_cleaners, name, None
+        )
         if not cleaner:
             raise UnknownCleanerException(f"Unknown cleaner: {name}")
         text = cleaner(text)
