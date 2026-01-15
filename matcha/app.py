@@ -233,7 +233,7 @@ def main():
                 audio = gr.Audio(interactive=False, label="Audio")
 
         with gr.Row(visible=False) as example_row_lj_speech:
-            examples = gr.Examples(  # pylint: disable=unused-variable
+            gr.Examples(
                 examples=[
                     [
                         "We propose Matcha-TTS, a new approach to non-autoregressive neural TTS, that uses conditional flow matching (similar to rectified flows) to speed up O D E-based speech synthesis.",
@@ -285,7 +285,7 @@ def main():
             )
 
         with gr.Row() as example_row_multispeaker:
-            multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
+            gr.Examples(
                 examples=[
                     [
                         "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
