@@ -1,0 +1,21 @@
+# @package _global_
+
+# 1910 上海话 TTS 实验配置 (MVP)
+# 使用命令: uv run python -m matcha.train experiment=shanghai_1910
+
+defaults:
+  - override /data: shanghai.yaml
+
+tags: ["shanghai", "1910", "wu"]
+
+run_name: shanghai_1910_base
+
+# 训练参数覆盖
+trainer:
+  max_epochs: 1000  # 可根据收敛情况调整
+  check_val_every_n_epoch: 10
+  log_every_n_steps: 50
+
+# 模型参数 (使用默认值，后续可调整)
+# model:
+#   n_vocab: 200  # 根据实际符号表大小调整

@@ -1,0 +1,37 @@
+# 上海话数据配置
+# 使用预处理的 IPA 标注，无需运行时 G2P
+_target_: matcha.data.text_mel_datamodule.TextMelDataModule
+name: shanghai
+
+# 使用 Matcha 兼容格式的 filelist (格式: path|ipa)
+train_filelist_path: data/filelists/train_matcha.txt
+valid_filelist_path: data/filelists/val_matcha.txt
+
+batch_size: 16  # 减小以适应可能的显存限制
+num_workers: 4   # 根据实际 CPU 核心数调整
+pin_memory: True
+
+# 使用 passthrough cleaner (IPA 已预处理)
+cleaners: [shanghai_passthrough]
+add_blank: True
+
+# 单说话人 (可扩展为多说话人)
+n_spks: 1
+
+# 音频参数 (与 LJSpeech 相同)
+n_fft: 1024
+n_feats: 80
+sample_rate: 22050
+hop_length: 256
+win_length: 1024
+f_min: 0
+f_max: 8000
+
+# 数据统计 (需要从实际数据计算，先用 LJSpeech 默认值)
+# TODO: 运行 compute_statistics.py 获取真实值
+data_statistics:
+  mel_mean: -5.5
+  mel_std: 2.1
+
+seed: ${seed}
+load_durations: false
