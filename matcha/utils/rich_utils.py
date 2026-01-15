@@ -47,7 +47,9 @@ def print_config_tree(
         _ = (
             queue.append(field)
             if field in cfg
-            else log.warning(f"Field '{field}' not found in config. Skipping '{field}' config printing...")
+            else log.warning(
+                f"Field '{field}' not found in config. Skipping '{field}' config printing..."
+            )
         )
 
     # add all the other fields to queue (not specified in `print_order`)
@@ -72,7 +74,9 @@ def print_config_tree(
 
     # save config tree to file
     if save_to_file:
-        with open(Path(cfg.paths.output_dir, "config_tree.log"), "w", encoding="utf-8") as file:
+        with open(
+            Path(cfg.paths.output_dir, "config_tree.log"), "w", encoding="utf-8"
+        ) as file:
             rich.print(tree, file=file)
 
 
@@ -97,5 +101,7 @@ def enforce_tags(cfg: DictConfig, save_to_file: bool = False) -> None:
         log.info(f"Tags: {cfg.tags}")
 
     if save_to_file:
-        with open(Path(cfg.paths.output_dir, "tags.log"), "w", encoding="utf-8") as file:
+        with open(
+            Path(cfg.paths.output_dir, "tags.log"), "w", encoding="utf-8"
+        ) as file:
             rich.print(cfg.tags, file=file)

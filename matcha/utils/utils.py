@@ -253,7 +253,7 @@ def get_phoneme_durations(durations, phones):
         )
         start = duration
 
-    assert list(duration_json[-1].values())[0]["endtime"] == sum(
-        durations
-    ), f"{list(duration_json[-1].values())[0]['endtime'],  sum(durations)}"
+    assert list(duration_json[-1].values())[0]["endtime"] == sum(durations), (
+        f"{list(duration_json[-1].values())[0]['endtime'], sum(durations)}"
+    )
     return duration_json
