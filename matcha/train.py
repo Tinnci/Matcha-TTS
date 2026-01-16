@@ -1,5 +1,8 @@
 from typing import Any, Dict, List, Optional, Tuple
 
+import matplotlib
+
+matplotlib.use("Agg")
 import hydra
 import lightning as L
 import rootutils

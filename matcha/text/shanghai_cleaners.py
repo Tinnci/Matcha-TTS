@@ -9,15 +9,20 @@ import re
 import sys
 from pathlib import Path
 
-# Add project root to path for importing pott_g2p
-_project_root = Path(__file__).resolve().parents[3]
-if str(_project_root) not in sys.path:
-    sys.path.insert(0, str(_project_root))
+# Try to import PottToIPA from project root
+# This may fail when running from external/Matcha-TTS during training
+_pott_converter = None
+try:
+    _project_root = Path(__file__).resolve().parents[3]
+    if str(_project_root) not in sys.path:
+        sys.path.insert(0, str(_project_root))
+    from src.pott_g2p import PottToIPA  # noqa: E402
 
-from src.pott_g2p import PottToIPA  # noqa: E402
-
-# Initialize the Pott-to-IPA converter
-_pott_converter = PottToIPA()
+    _pott_converter = PottToIPA()
+except (ImportError, ModuleNotFoundError):
+    # PottToIPA not available - shanghai_cleaners will fail but
+    # shanghai_passthrough will still work (for pre-annotated IPA)
+    pass
 
 # Regex patterns
 _whitespace_re = re.compile(r"\s+")
@@ -42,6 +47,12 @@ def pott_to_ipa(text: str) -> str:
     Returns:
         IPA string with spaces between syllables
     """
+    if _pott_converter is None:
+        raise RuntimeError(
+            "PottToIPA not available. Use shanghai_passthrough for pre-annotated IPA, "
+            "or run from project root directory."
+        )
+
     result_parts = []
 
     # Split by non-alphabetic characters while preserving punctuation

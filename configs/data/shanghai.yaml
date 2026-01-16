@@ -3,9 +3,9 @@
 _target_: matcha.data.text_mel_datamodule.TextMelDataModule
 name: shanghai
 
-# 使用 Matcha 兼容格式的 filelist (格式: path|ipa)
-train_filelist_path: data/filelists/train_matcha.txt
-valid_filelist_path: data/filelists/val_matcha.txt
+# 使用清理后的 Matcha 兼容格式 (去除了未转换的汉字)
+train_filelist_path: data/filelists/train_clean.txt
+valid_filelist_path: data/filelists/val_clean.txt
 
 batch_size: 16  # 减小以适应可能的显存限制
 num_workers: 4   # 根据实际 CPU 核心数调整
@@ -21,7 +21,7 @@ n_spks: 1
 # 音频参数 (与 LJSpeech 相同)
 n_fft: 1024
 n_feats: 80
-sample_rate: 22050
+sample_rate: 16000
 hop_length: 256
 win_length: 1024
 f_min: 0
